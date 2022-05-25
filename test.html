@@ -1,29 +1,27 @@
 <html>
-  <head>
-    <title>Site</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 
-  </head>
-  <body>
-    <div id="app">
+<head>
+  <title>Site</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
     <header>
-      <div class="navbar navbar-default">  
-      <h1 v-text="sitename"></h1>
+      <div class="navbar navbar-default">
+        <h1 v-text="sitename"></h1>
       </div>
       <div class="nav navbar-nav navbar-right cart">
-        <button type="button"
-        class="btn btn-defult btn-lg"
-        v-on:click="showCheckOut">
-        <span 
-        class="glyphicon glyphicon-shoopping-cart">
-      {{cartItemCount}}</span>
-      Chechout
+        <button type="button" class="btn btn-defult btn-lg" v-on:click="showCheckOut">
+          <span class="glyphicon glyphicon-shoopping-cart">
+            {{cartItemCount}}</span>
+          Chechout
         </button>
       </div>
     </header>
     <main>
-        <div class="row product">
-          <div v-if="showProduct">
+      <div class="row product">
+        <div v-if="showProduct">
           <div class="col">
             <figure>
               <img :src="product.image">
@@ -33,135 +31,131 @@
             <h1 v-text="product.title"></h1>
             <p v-html="product.description"></p>
             <p class="price">
-                {{product.price | formatPrice}}
-                <button class="default"
-                v-on:click="addToCart"
-                v-if="canAddToCart">
+              {{product.price | formatPrice}}
+              <button class="default" v-on:click="addToCart" v-if="canAddToCart">
                 Add to cart
-                </button>
-                <button class="disabled"
-                  v-else > No! </button>
+              </button>
+              <button class="disabled" v-else> No! </button>
             </p>
           </div>
         </div>
         <div v-else>
           <div class="col-md-6">
             <strong>First Name:</strong>
-            <input v-model="order.firstName"
-            class="form-control"/>
-          <div class="col-md-6">
-            <strong>Last Name:</strong>
-            <input v-model="order.lastName"
-            class="form-control"/>
-          </div>
-        </div class="col-md-12 verify">
-        <pre>
+            <input v-model="order.firstName" class="form-control" />
+            <div class="col-md-6">
+              <strong>Last Name:</strong>
+              <input v-model="order.lastName" class="form-control" />
+            </div>
+          </div class="col-md-12 verify">
+          <pre>
           First Name: {{order.firstname}}
           Last Name: {{order.lastname}}
         </pre>
         </div>
       </div>
-      </main>
-    </div>
-    
-    <script>
-var APP_LOG_LIFECYCLE_EVENTS = false;
+    </main>
+  </div>
 
-var webstore = new Vue({
-  el: "#app",
-  data: {
-    sitename: "Hello",
-    showProduct: true,
-    order: {
-      firstname: '',
-      lastname: ''
-    },
-  product: {
-    id: 1001,
-    title: "Rat Food, 25kg bag",
-    description: "A 25kg bag of <em>irresistible</em>, "+
-                  "organic goodness for your rat.",
-    price: 200000,
-    image: "/home/user/Downloads/rat.jpg",
-    availableInventory: 3
-  },
-  cart: []
-},
-  beforeCreate: function() {
-    if (APP_LOG_LIFECYCLE_EVENTS) {
-      console.log("beforeCreate");
-    }
-  },
-  created: function() {
-    if (APP_LOG_LIFECYCLE_EVENTS) {
-      console.log("created");
-    }
-  },
-  beforeMount: function() {
-    if (APP_LOG_LIFECYCLE_EVENTS) {
-      console.log("beforeMount");
-    }
-  },
-  mounted:  function() {
-    if (APP_LOG_LIFECYCLE_EVENTS) {
-      console.log("mounted");
-    }
-  },
-  beforeUpdate:  function() {
-    if (APP_LOG_LIFECYCLE_EVENTS) {
-      console.log("beforeUpdate");
-    }
-  },
-  updated:  function() {
-    if (APP_LOG_LIFECYCLE_EVENTS) {
-      console.log("updated");
-    }
-  },
-  beforeDestroy:  function() {
-    if (APP_LOG_LIFECYCLE_EVENTS) {
-      console.log("beforeDestroy ");
-    }
-  },
-  destroyed:  function() {
-    if (APP_LOG_LIFECYCLE_EVENTS) {
-      console.log("destroyed");
-    }
-  },
-  filters: {
-    formatPrice: function(price) {
-      if (!parseInt(price)) { return ""; }
-      if (price > 99999) {
-        var priceString = (price / 100).toFixed(2);
-        var priceArray = priceString.split("").reverse();
-        var index = 3;
-        while (priceArray.length > index + 3) {
-          priceArray.splice(index+3, 0, ",");
-          index += 4;
+  <script>
+    var APP_LOG_LIFECYCLE_EVENTS = false;
+
+    var webstore = new Vue({
+      el: "#app",
+      data: {
+        sitename: "Hello",
+        showProduct: true,
+        order: {
+          firstname: '',
+          lastname: ''
+        },
+        product: {
+          id: 1001,
+          title: "Rat Food, 25kg bag",
+          description: "A 25kg bag of <em>irresistible</em>, " +
+            "organic goodness for your rat.",
+          price: 200000,
+          image: "/home/user/Downloads/rat.jpg",
+          availableInventory: 3
+        },
+        cart: []
+      },
+      beforeCreate: function () {
+        if (APP_LOG_LIFECYCLE_EVENTS) {
+          console.log("beforeCreate");
         }
-        return "$" + priceArray.reverse().join("");
-      } else {
-        return "$" + (price / 100).toFixed(2);
-      }
-    }
-  },
-  methods: {
-    addToCart: function() {
-    this.cart.push( this.product.id)
-  },
-  showCheckOut() {
-    this.showProduct = this.showProduct ? false : true;
-  }
-},
-computed: {
-  cartItemCount: function() {
-    return this.cart.length || '';
-  },
-  canAddToCart: function() {
-    return this.product.availableInventory > this.cartItemCount;
-  }
-},
-});
+      },
+      created: function () {
+        if (APP_LOG_LIFECYCLE_EVENTS) {
+          console.log("created");
+        }
+      },
+      beforeMount: function () {
+        if (APP_LOG_LIFECYCLE_EVENTS) {
+          console.log("beforeMount");
+        }
+      },
+      mounted: function () {
+        if (APP_LOG_LIFECYCLE_EVENTS) {
+          console.log("mounted");
+        }
+      },
+      beforeUpdate: function () {
+        if (APP_LOG_LIFECYCLE_EVENTS) {
+          console.log("beforeUpdate");
+        }
+      },
+      updated: function () {
+        if (APP_LOG_LIFECYCLE_EVENTS) {
+          console.log("updated");
+        }
+      },
+      beforeDestroy: function () {
+        if (APP_LOG_LIFECYCLE_EVENTS) {
+          console.log("beforeDestroy ");
+        }
+      },
+      destroyed: function () {
+        if (APP_LOG_LIFECYCLE_EVENTS) {
+          console.log("destroyed");
+        }
+      },
+      filters: {
+        formatPrice: function (price) {
+          if (!parseInt(price)) { return ""; }
+          if (price > 99999) {
+            var priceString = (price / 100).toFixed(2);
+            var priceArray = priceString.split("").reverse();
+            var index = 3;
+            while (priceArray.length > index + 3) {
+              priceArray.splice(index + 3, 0, ",");
+              index += 4;
+            }
+            return "$" + priceArray.reverse().join("");
+          } else {
+            return "$" + (price / 100).toFixed(2);
+          }
+        }
+      },
+      methods: {
+        addToCart: function () {
+          this.cart.push(this.product.id)
+        },
+        showCheckOut() {
+          this.showProduct = this.showProduct ? false : true;
+        }
+      },
+      computed: {
+        cartItemCount: function () {
+          return this.cart.length || '';
+        },
+        canAddToCart: function () {
+          return this.product.availableInventory > this.cartItemCount;
+        }
+      },
+    });
 
-     </script>
-  </body>
+  </script>
+</body>
+
 </html>
